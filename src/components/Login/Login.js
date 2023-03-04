@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
@@ -9,22 +9,23 @@ const Login = (props) => {
   const [emailIsValid, setEmailIsValid] = useState();
   const [enteredPassword, setEnteredPassword] = useState('');
   const [passwordIsValid, setPasswordIsValid] = useState();
+  const [enteredclg, setEnteredclg] = useState('');
+  const [clgIsValid, setclgIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
+
+  useEffect(()=>{setFormIsValid(
+    enteredEmail.includes('@') && enteredPassword.trim().length > 6 && enteredclg.trim().length>5
+  );},[enteredEmail,enteredPassword,enteredclg]);
 
   const emailChangeHandler = (event) => {
     setEnteredEmail(event.target.value);
-
-    setFormIsValid(
-      event.target.value.includes('@') && enteredPassword.trim().length > 6
-    );
   };
 
   const passwordChangeHandler = (event) => {
     setEnteredPassword(event.target.value);
-
-    setFormIsValid(
-      event.target.value.trim().length > 6 && enteredEmail.includes('@')
-    );
+  };
+  const clgChangeHandler = (event) => {
+    setEnteredclg(event.target.value);
   };
 
   const validateEmailHandler = () => {
@@ -34,10 +35,13 @@ const Login = (props) => {
   const validatePasswordHandler = () => {
     setPasswordIsValid(enteredPassword.trim().length > 6);
   };
+  const validateclgHandler = () => {
+    setclgIsValid(enteredclg.trim().length > 5);
+  };
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(enteredEmail, enteredPassword);
+    props.onLogin(enteredEmail, enteredPassword,enteredclg);
   };
 
   return (
@@ -69,6 +73,20 @@ const Login = (props) => {
             value={enteredPassword}
             onChange={passwordChangeHandler}
             onBlur={validatePasswordHandler}
+          />
+        </div>
+        <div
+          className={`${classes.control} ${
+            clgIsValid === false ? classes.invalid : ''
+          }`}
+        >
+          <label htmlFor="clg">College Name</label>
+          <input
+            type="text"
+            id="clg"
+            value={enteredclg}
+            onChange={clgChangeHandler}
+            onBlur={validateclgHandler}
           />
         </div>
         <div className={classes.actions}>
