@@ -6,7 +6,7 @@ import Button from "../UI/Button/Button";
 
 const emailReducer = (state, action) => {
   if(action.type==='USER_INPUT'){
-    return { value: '', isValid: action.val.includes('@') };
+    return { value: action.val, isValid: action.val.includes('@') };
   }
   if(action.type==='INPUT_BLUR'){
     return { value: state.value, isValid: state.value.includes('@') };
@@ -16,7 +16,7 @@ const emailReducer = (state, action) => {
 
 const passwordReducer = (state, action) => {
   if(action.type==='USER_INPUT'){
-    return { value: '', isValid: action.val.trim().length > 6 };
+    return { value: action.val, isValid: action.val.trim().length > 6 };
   }
   if(action.type==='INPUT_BLUR'){
     return { value: state.value, isValid: state.value.trim().length > 6 };
@@ -34,14 +34,16 @@ const Login = (props) => {
   const [formIsValid, setFormIsValid] = useState(false);
 
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
-    value: '',
+    value:'',
     isValid: null,
   });
 
   const [passwordState, dispatchPassword] = useReducer(passwordReducer, {
-    value: '',
+    value:'',
     isValid: null,
   });
+const{isValid:emailIsValid}=emailState;
+const{isValid:passwordIsValid}=passwordState
 
   useEffect(() => {
     console.log('EFFECT RUNNING');
@@ -51,31 +53,31 @@ const Login = (props) => {
     };
   }, []);
 
-  // useEffect(()=>{
-  //   const identifier= setTimeout(()=>{
-  //     console.log('validity')
-  //     setFormIsValid(
-  //       enteredEmail.includes('@') && enteredPassword.trim().length > 6 && enteredclg.trim().length>5
-  //     );
-  //   },500);
-  //   return ()=>{
-  //     console.log('cleanup')
-  //     clearTimeout(identifier)
-  //   }
-  // },[enteredEmail,enteredPassword,enteredclg]);
+  useEffect(()=>{
+    const identifier= setTimeout(()=>{
+      console.log('validity')
+      setFormIsValid(
+        emailIsValid&& passwordIsValid && enteredclg.trim().length>5
+      );
+    },500);
+    return ()=>{
+      console.log('cleanup')
+      clearTimeout(identifier)
+    }
+  },[emailIsValid,passwordIsValid,enteredclg]);
 
   const emailChangeHandler = (event) => {
     // setEnteredEmail(event.target.value);
     dispatchEmail({type:'USER_INPUT',val:event.target.value})
-    setFormIsValid(event.target.value.includes("@") && passwordState.isValid && enteredclg.trim().length > 5
-    );
+    // setFormIsValid(event.target.value.includes("@") && passwordState.isValid && enteredclg.trim().length > 5
+    // );
   };
 
   const passwordChangeHandler = (event) => {
     // setEnteredPassword(event.target.value);
-    dispatchEmail({type:'USER_INPUT',val:event.target.value})
-    setFormIsValid(emailState.isValid && event.target.value.trim().length > 6 && enteredclg.trim().length > 5
-    );
+    dispatchPassword({type:'USER_INPUT',val:event.target.value})
+    // setFormIsValid(emailState.isValid && event.target.value.trim().length > 6 && enteredclg.trim().length > 5
+    // );
   };
   const clgChangeHandler = (event) => {
     setEnteredclg(event.target.value);
