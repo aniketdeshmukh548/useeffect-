@@ -1,0 +1,16 @@
+.total {
+    margin: 2rem auto;
+    width: 20%;
+    max-width: 40rem;
+  }
+  
+  .total div {
+    list-style: none;
+    padding: 1rem;
+  }
+  
+  .total h2 {
+    border: 1px solid #ccc;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+  }
